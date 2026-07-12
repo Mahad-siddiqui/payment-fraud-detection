@@ -1,57 +1,87 @@
-# Real Time Financial Anomaly Detection
-[Googel Cobal File](https://colab.research.google.com/drive/1jtVqiNJ6e0VVu2O0YVhnFuxb25EMIX_A?usp=sharing)
+# Payment Fraud Detection Platform
 
-This repository contains a Python script for financial anomaly detection using the Isolation Forest algorithm. The script includes data loading, preprocessing, model training, and evaluation steps.
+This project is upgraded from a single script into a full-stack fraud monitoring platform:
+
+1. Efficient Python backend API with Isolation Forest and feature engineering.
+2. Modern React dashboard for monitoring fraud risk and transaction patterns.
+3. Backward-compatible script runner for generating analysis plots.
+
+## Project Structure
+
+- backend/: FastAPI service and ML pipeline.
+- frontend/: React + Vite dashboard.
+- Code.py: CLI runner that trains and writes plots to ResultsPlots/.
+- ResultsPlots/: Output charts from CLI run.
 
 ## Dataset
 
-The financial anomaly dataset is stored in 'financial_anomaly_data.csv'. It contains information about transactions, including timestamps, transaction amounts, and types.
+Place your dataset at the repository root as financial_anomaly_data.csv.
 
-## Prerequisites
+Required columns:
 
-Make sure you have the following libraries installed:
-- pandas
-- scikit-learn
-- matplotlib
-- seaborn
+- Timestamp
+- Amount
+- TransactionType
 
-You can install them using:
-bash
-pip install pandas scikit-learn matplotlib seaborn
+If no CSV file is found, the backend and CLI automatically generate realistic demo data.
 
+## Backend Setup
 
-## Steps
+From project root:
 
-1. **Load the Dataset:**
-   - Load the financial anomaly dataset using Pandas.
+1. Install dependencies:
 
-2. **Check and Impute Missing Values:**
-   - Check for missing values in the dataset.
-   - Impute missing values using the mean strategy.
+python -m pip install -r backend/requirements.txt
 
-3. **Normalize Data:**
-   - Standardize data by normalizing if needed.
+2. Start API server:
 
-4. **Train Isolation Forest Model:**
-   - Use the Isolation Forest algorithm to detect potential fraudulent transactions.
+uvicorn backend.app.main:app --reload --port 8000
 
-5. **Identify Potential Fraudulent Transactions:**
-   - Predict and identify potential fraudulent transactions.
-   - Example feature engineering: Extract the hour from the timestamp.
+API base URL:
 
-6. **Visualize Anomaly Scores:**
-   - Create scatter plots, histograms, box plots, and violin plots to visualize anomaly scores and potential fraudulent transactions.
+http://127.0.0.1:8000
 
-7. **Evaluate Model Performance:**
-   - Split the data into training and testing sets.
-   - Train the model on the training set and evaluate its performance on the test set.
+Main endpoints:
 
-8. **Pair Plot of Relevant Variables:**
-   - Create a pair plot to visualize the relationships between variables, including anomaly scores.
+- GET /api/health
+- GET /api/summary
+- GET /api/transactions?limit=120&fraud_only=true
+- GET /api/charts/trend
+- GET /api/charts/distribution
+- POST /api/reload
 
-## How to Run
+## Frontend Setup
 
-Clone the repository and run the Python script. Make sure to have the required libraries installed.
+1. Install dependencies:
 
+cd frontend
+npm install
 
-Feel free to customize the script or extend it based on your specific requirements.
+2. Start dashboard:
+
+npm run dev
+
+Dashboard URL:
+
+http://127.0.0.1:5173
+
+## Legacy CLI Mode
+
+Run the legacy script for quick analysis and chart export:
+
+python Code.py
+
+Charts are saved in ResultsPlots/ as Plot-1.png to Plot-5.png.
+
+## Model Improvements Included
+
+1. Better features: amount, transaction hour, day-of-week, weekend flag, transaction type encoding.
+2. Robust missing-value handling with median imputation.
+3. Standardized feature scaling for stable model behavior.
+4. Risk scoring normalized to a 0-100 range for UI readability.
+5. Cached service model loading in backend for faster API response.
+
+## Notes
+
+1. This is an unsupervised anomaly detector; labels represent anomaly likelihood, not confirmed fraud.
+2. Tune contamination via POST /api/reload with contamination in range 0.001 to 0.2.
