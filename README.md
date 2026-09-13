@@ -7,3 +7,5 @@ This project is upgraded from a single script into a full-stack fraud monitoring
 3. Backward-compatible script runner for generating analysis plots.
 
 ## Project Structure
+
+- backend/: FastAPI service and ML pipeline.
