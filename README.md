@@ -9,3 +9,4 @@ This project is upgraded from a single script into a full-stack fraud monitoring
 ## Project Structure
 
 - backend/: FastAPI service and ML pipeline.
+- frontend/: React + Vite dashboard.
